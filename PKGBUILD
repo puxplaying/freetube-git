@@ -8,14 +8,16 @@ pkgdesc='An open source desktop YouTube player built with privacy in mind - buil
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://freetubeapp.io"
 license=('AGPL-3.0-or-later')
-depends=('electron36')
-makedepends=('git' 'yarn')
+depends=('electron38')
+makedepends=('git' 'npm' 'yarn')
 provides=('freetube')
 conflicts=('freetube')
 source=(git+https://github.com/FreeTubeApp/FreeTube.git#branch=development
         freetube.desktop
         freetube.sh)
-sha256sums=(SKIP SKIP SKIP)
+sha256sums=('SKIP'
+            'ada2b4b8f6a1e8896acbce4f4d311228d2c86026c273ffa00afa3247294f8b1e'
+            '369c2d1e33d37b29a9b0b0fa3a8d9db867a4785d326c7a9464c201317ef65a5f')
 
 pkgver() {
   cd "$srcdir/$_pkgname"
@@ -23,14 +25,14 @@ pkgver() {
 }
 
 prepare() {
-  sed -i "5i electronDist: '/usr/lib/electron36'," "$srcdir/$_pkgname/_scripts/ebuilder.config.mjs"
+  sed -i "5i electronDist: '/usr/lib/electron38'," "$srcdir/$_pkgname/_scripts/ebuilder.config.mjs"
   sed -i "s/targets = Platform.LINUX.*/targets = Platform.LINUX.createTarget(['dir'], arch)/" "$srcdir/$_pkgname/_scripts/build.mjs"
 }
 
 build() {
   cd "$srcdir/$_pkgname"
-  yarn --cache-folder "${srcdir}/yarn-cache" install
-  yarn --cache-folder "${srcdir}/yarn-cache" run build
+  npm install --cache "${srcdir}/npm-cache"
+  NODE_OPTIONS="--no-webstorage" npm run build
 }
 
 package() {
