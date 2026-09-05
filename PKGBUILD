@@ -1,4 +1,4 @@
-# Maintainer: picokan <todaysoracle@protonmail.com>
+# Maintainer: pux
 
 pkgname=freetube-git
 _pkgname=FreeTube
