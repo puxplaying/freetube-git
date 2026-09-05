@@ -4,7 +4,7 @@ pkgname=freetube-git
 _pkgname=FreeTube
 _electron=electron42
 pkgver=0.25.1.beta.r10494.04b42f1
-pkgrel=1
+pkgrel=2
 pkgdesc='An open source desktop YouTube player built with privacy in mind - built from git source tree.'
 arch=('x86_64' 'i686' 'arm' 'armv6h' 'armv7h' 'aarch64')
 url="https://freetubeapp.io"
@@ -47,5 +47,6 @@ package() {
   install -Dm644 LICENSE "$pkgdir/usr/share/licenses/$pkgname/LICENSE"
   install -Dm644 "./_icons/icon.svg" "$pkgdir/usr/share/pixmaps/freetube.svg"
   cd ..
-  install -Dm644 "freetube.desktop" "$pkgdir/usr/share/applications/$pkgname.desktop"
+  # Desktop ID must be "freetube" (the app ID the app announces) or GNOME dock matching breaks
+  install -Dm644 "freetube.desktop" "$pkgdir/usr/share/applications/freetube.desktop"
 }
