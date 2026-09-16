@@ -2,7 +2,7 @@
 
 pkgname=freetube-git
 _pkgname=FreeTube
-_electron=electron42
+_electron=electron43
 pkgver=0.25.1.beta.r10494.04b42f1
 pkgrel=2
 pkgdesc='An open source desktop YouTube player built with privacy in mind - built from git source tree.'
@@ -27,8 +27,10 @@ prepare() {
   sed -i "5i electronDist: '/usr/lib/$_electron'," "$srcdir/$_pkgname/_scripts/ebuilder.config.mjs"
   sed -i "s/targets = Platform.LINUX.*/targets = Platform.LINUX.createTarget(['dir'], arch)/" "$srcdir/$_pkgname/_scripts/build.mjs"
   sed -i "s/_electron_/$_electron/" "$srcdir/freetube.sh"
-  sed -i "6i strictDepBuilds: false" "$srcdir/$_pkgname/pnpm-workspace.yaml"
-  sed -i "6i minimumReleaseAge: 0" "$srcdir/$_pkgname/pnpm-workspace.yaml"
+  # pnpm >= 10.14 release-age check blocks fresh packages; lockfile is removed in build(), so disable it
+  # (append at end: line-based sed inserts broke after FreeTube #9766 restructured pnpm-workspace.yaml for pnpm 11)
+  local ws="$srcdir/$_pkgname/pnpm-workspace.yaml"
+  grep -qE '^minimumReleaseAge:' "$ws" || printf 'minimumReleaseAge: 0\n' >> "$ws"
 }
 
 build() {
